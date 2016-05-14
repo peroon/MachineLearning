@@ -4,6 +4,7 @@
 
 # pyenv
 
+* I choose Python 2.x (not 3.x)
 * http://qiita.com/y__sama/items/5b62d31cb7e6ed50f02c
 
 # Sublime Text from Terminal
