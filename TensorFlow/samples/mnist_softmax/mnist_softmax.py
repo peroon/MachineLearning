@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,12 +36,15 @@ FLAGS = None
 def main(_):
   # Import data
   mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+  # mnist.train
+  # mnist.test
+  # mnist.validation
 
   # Create the model
-  x = tf.placeholder(tf.float32, [None, 784])
-  W = tf.Variable(tf.zeros([784, 10]))
+  x = tf.placeholder(tf.float32, [None, 784]) # 28x28 image #Noneは1ではなく、any lengthを表す
+  W = tf.Variable(tf.zeros([784, 10])) # ここのWは乱数ではないのね
   b = tf.Variable(tf.zeros([10]))
-  y = tf.matmul(x, W) + b
+  y = tf.matmul(x, W) + b #こうやって判別しますというモデル y の定義
 
   # Define loss and optimizer
   y_ = tf.placeholder(tf.float32, [None, 10])
@@ -54,14 +58,18 @@ def main(_):
   #
   # So here we use tf.nn.softmax_cross_entropy_with_logits on the raw
   # outputs of 'y', and then average across the batch.
-  cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
+
+  # 最小化する損失の定義
+  cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_)) #クロスエントロピーより安定する
   train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
   sess = tf.InteractiveSession()
   tf.global_variables_initializer().run()
   # Train
   for _ in range(1000):
-    print(_)
+    if _ % 100 == 0:
+        print(_)
+    # 訓練データの部分集合で最急降下法の方向を決める、確率的最急降下法
     batch_xs, batch_ys = mnist.train.next_batch(100)
     sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
@@ -70,6 +78,7 @@ def main(_):
   accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
   print(sess.run(accuracy, feed_dict={x: mnist.test.images,
                                       y_: mnist.test.labels}))
+  #accuracy -> correct_prediction -> y, y_ -> y -> xと辿っていって、feed_dictのxを使うのだろう
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
