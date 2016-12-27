@@ -107,4 +107,4 @@ print ("elapsed_time:{0}".format(elapsed_time)) + "[sec]"
 
 # 500step
 ## Mac CPU : elapsed_time:161.193413019[sec]
-## Mac GPU :
+## Mac GPU : AMD-GPUなのでCUDA利用できず中止
